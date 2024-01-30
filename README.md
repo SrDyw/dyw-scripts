@@ -1,0 +1,1 @@
+# Implemented IDamageable interface
