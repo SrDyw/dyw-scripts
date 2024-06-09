@@ -5,16 +5,23 @@ using UnityEngine;
 public class DestroytAtTime : MonoBehaviour
 {
     public float timeToDestroy = 1;
-    
+    public bool autoInit = true;
+
     void Awake()
     {
-        StartCoroutine(DestroyGameObject());
+        if (autoInit) Init(timeToDestroy);
+
+    }
+    public void Init(float time)
+    {
+        StopAllCoroutines();
+        StartCoroutine(DestroyGameObject(time));
     }
 
-    IEnumerator DestroyGameObject() {
+    IEnumerator DestroyGameObject(float time)
+    {
 
         yield return new WaitForSeconds(timeToDestroy);
         Destroy(gameObject);
-        yield return null;
     }
 }

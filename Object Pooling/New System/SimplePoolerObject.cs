@@ -5,18 +5,19 @@ using DywFunctions.Pool;
 
 public class SimplePoolerObject : PoolerObject
 {
-    [SerializeField]
-    private float lifeTime = 5f;
+    public float lifeTime = 5f;
     [SerializeField]
     private Animator animator;
-    public Animator Animator {get => animator;}
+    public Animator Animator { get => animator; }
 
-    private void Awake() {
+    private void Awake()
+    {
         animator = GetComponent<Animator>();
+        if (!Pooler) OnPoolSpawn();
     }
     public override void OnPoolSpawn()
     {
-        if (animator) animator.enabled = true; 
+        if (animator) animator.enabled = true;
         StartCoroutine(Timer(lifeTime));
     }
 
@@ -26,7 +27,8 @@ public class SimplePoolerObject : PoolerObject
         base.ReturnToPool();
     }
 
-    IEnumerator Timer(float time) {
+    public IEnumerator Timer(float time)
+    {   
         yield return new WaitForSeconds(time);
         ReturnToPool();
     }

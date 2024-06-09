@@ -7,14 +7,17 @@ namespace DywFunctions
 {
     public static class Utilities
     {
-        public static void Show<T>(this IList<T> collection) {
-            if (collection.Count == 0) {
+        public static void Show<T>(this IList<T> collection)
+        {
+            if (collection.Count == 0)
+            {
                 Debug.Log("[]");
                 return;
             }
 
             string message = "[\n";
-            foreach (var item in collection) {
+            foreach (var item in collection)
+            {
                 if (item == null) continue;
                 message += "\t" + item.ToString() + "\n";
             }
@@ -22,21 +25,74 @@ namespace DywFunctions
             Debug.Log(message);
         }
 
-        public static Transform[] ExtractChildren(this Transform transform) {
+        public static Collider2D CheckCollision(this MonoBehaviour bh, Vector3 position, LayerMask layer)
+        {
+            var col = Physics2D.OverlapPoint(position, layer);
+            return col;
+        }
+
+        public static void WhoIsNull(params object[] objects)
+        {
+            List<string> nullObjects = new List<string>();
+            for (int i = 0; i < objects.Length; ++i)
+            {
+                if (objects[i] == null)
+                {
+                    nullObjects.Add($"Object at index ${i} is Null");
+                }
+            }
+            if (nullObjects.Count > 0)
+                nullObjects.Show();
+            else "No one is null".Print();
+        }
+        public static void Print(this object obj)
+        {
+            Debug.Log(obj);
+        }
+
+        public static Color MofidyAlpha(this Color color, float alpha) => new Color(color.r, color.g, color.b, alpha);
+
+        public static int HexToDec(string hex) => System.Convert.ToInt32(hex, 16);
+        public static string DecToHex(int value) => value.ToString("X2");
+        public static string FloatNormalizeToHex(float value) => DecToHex(Mathf.RoundToInt(value * 255f));
+        public static float HexToFloatNormalize(string hex) => HexToDec(hex) / 255f;
+        public static Color HexToColor(string hex)
+        {
+
+            var r = hex.Length >= 2 ? HexToFloatNormalize(hex.Substring(0, 2)) : 0;
+            var g = hex.Length >= 4 ? HexToFloatNormalize(hex.Substring(2, 2)) : 0;
+            var b = hex.Length >= 6 ? HexToFloatNormalize(hex.Substring(4, 2)) : 0;
+            var a = hex.Length >= 8 ? HexToFloatNormalize(hex.Substring(6, 2)) : 1;
+            return new Color(r, g, b, a);
+        }
+
+        public static Transform[] ExtractChildren(this Transform transform)
+        {
             List<Transform> children = new();
-            for(int i = 0; i < transform.childCount; i++) {
+            for (int i = 0; i < transform.childCount; i++)
+            {
                 children.Add(transform.GetChild(i));
             }
             return children.ToArray();
         }
+        public static Transform ExtractChild(this Transform transform, string name)
+        {
+            for (int i = 0; i < transform.childCount; i++)
+            {
+                if (transform.GetChild(i).name == name) return transform.GetChild(i);
+            }
+            return null;
+        }
 
-        public static void ForEach<T>(this T[] collection, System.Action<T> predicate) {
+        public static void ForEach<T>(this T[] collection, System.Action<T> predicate)
+        {
             foreach (var item in collection)
             {
                 predicate(item);
             }
         }
-        public static void ForEach<T>(this T[] collection, System.Action<T, int> predicate) {
+        public static void ForEach<T>(this T[] collection, System.Action<T, int> predicate)
+        {
             int i = 0;
             foreach (var item in collection)
             {
@@ -245,6 +301,17 @@ namespace DywFunctions
             {
                 function();
                 quantity--;
+            }
+        }
+
+        public static void Repeat(System.Action<int> function, int quantity)
+        {
+            int count = 0;
+            while (quantity > 0)
+            {
+                function(count);
+                quantity--;
+                count++;
             }
         }
 

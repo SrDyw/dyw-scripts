@@ -80,6 +80,14 @@ namespace DywFunctions
                 return angle;
             }
 
+            public static Vector2 RotateVectorByAngle(this Vector2 v1, float angle) {
+                float angleToRadians = angle * Mathf.Deg2Rad;
+                float newVX = v1.x * Mathf.Cos(angleToRadians) - v1.y * Mathf.Sin(angleToRadians);
+                float newVY = v1.x * Mathf.Sin(angleToRadians) + v1.y * Mathf.Cos(angleToRadians);
+
+                return new(newVX, newVY);
+            }     
+
             //
             // Resumen:
             //     Return a direction vector beetween two vectors.
